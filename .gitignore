@@ -11,3 +11,6 @@ env/
 # Data files
 *.csv
 *.png
+
+# os
+.DS_Store

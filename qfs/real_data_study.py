@@ -15,3 +15,4 @@ def study_regression():
 if __name__ == '__main__':
     study_classification()
     study_regression()
+    
