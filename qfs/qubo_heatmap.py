@@ -15,7 +15,7 @@ def plot_qubo_heatmap(Q, title='QUBO Matrix'):
     plt.tight_layout()
     plt.show()
 
-def demo_qubo_heatmap(alpha_list=[0.1, 0.5, 0.9]):
+def demo_qubo_heatmap(alpha_list=[0.01, 0.1, 0.5, 0.9, 0.99]):
     # 使用 synth10 測試
     X, y, _ = generate_synth10_classification()
     I = compute_importance_classification(X, y)

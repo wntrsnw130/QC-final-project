@@ -173,7 +173,6 @@ def benchmark_regression_real(dataset_name, k=4, n_runs=5):
     print(f"[{dataset_name}] MI Top-{k} MSE: {np.mean(mse_mi):.2f}")
     print(f"[{dataset_name}] QFS MSE: {np.mean(mse_qfs):.2f}")
 
-
 if __name__ == '__main__':
     print("===== Classification Benchmark =====")
     benchmark_classification()
