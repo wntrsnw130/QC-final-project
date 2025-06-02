@@ -6,6 +6,9 @@ from qiskit.algorithms.optimizers import COBYLA
 from qiskit.circuit.library import TwoLocal
 from qiskit.opflow import PauliSumOp
 
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
 
 from qfs.qubo_constructor import construct_qubo_matrix
 from qfs.mi_estimation import compute_importance_classification, compute_redundancy
@@ -62,10 +65,10 @@ def demo_vqe_aer(alpha=0.5):
     vqe = VQE(ansatz=ansatz, optimizer=optimizer, quantum_instance=qi)
     result = vqe.compute_minimum_eigenvalue(hamiltonian)
     energy = result.eigenvalue.real + offset
-    print(f"✅ Local VQE estimated minimum energy: {energy:.4f}")
+    print(f"Local VQE estimated minimum energy: {energy:.4f}")
 
     # ========== 還原 bitstring ==========
-    print("\n🔍 Recovering selected features from ansatz state...")
+    print("\nRecovering selected features from ansatz state...")
 
     # 將最佳參數代入 ansatz，得到具體電路
     param_values = result.optimal_point
@@ -78,11 +81,24 @@ def demo_vqe_aer(alpha=0.5):
 
     # 選擇出現最多的 bitstring
     most_common = max(counts, key=counts.get)
-    print(f"🧠 Most selected bitstring (x*): {most_common}")
+    print(f"Most selected bitstring (x*): {most_common}")
 
-    # 還原選擇的特徵 index（注意 bitstring 是反的）
     selected = [i for i, bit in enumerate(reversed(most_common)) if bit == '1']
-    print(f"✅ Selected feature indices: {selected}")
+    print(f"Selected feature indices: {selected}")
+
+    # 評估效果
+    print("\nEvaluating selected features using Random Forest...")
+
+    X_selected = X[:, selected]
+    X_train, X_test, y_train, y_test = train_test_split(X_selected, y, test_size=0.3, random_state=42)
+
+    clf = RandomForestClassifier(n_estimators=100, random_state=42)
+    clf.fit(X_train, y_train)
+    y_pred = clf.predict(X_test)
+
+    acc = accuracy_score(y_test, y_pred)
+    print(f"Accuracy with selected features: {acc:.4f}")
+
 
 
 if __name__ == "__main__":

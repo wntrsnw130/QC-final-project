@@ -1,12 +1,15 @@
 from sklearn.datasets import load_iris, load_digits, load_breast_cancer, fetch_california_housing, load_diabetes
 import pandas as pd
 
+from sklearn.utils import Bunch
+from sklearn.datasets import fetch_openml
+
 def load_ionosphere():
-    from sklearn.datasets import fetch_openml
     data = fetch_openml(name='ionosphere', version=1, as_frame=True)
     X = data.data.to_numpy()
     y = (data.target == 'g').astype(int)  # 將 'g', 'b' 轉成 1/0
-    return X, y
+    return Bunch(data=X, target=y, feature_names=data.feature_names)
+
 
 def load_classification_dataset(name):
     if name == 'iris':
